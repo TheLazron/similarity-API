@@ -3,6 +3,12 @@
 import { useTheme } from "next-themes";
 
 import { FC, useEffect, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import {
+  atomOneDarkReasonable,
+  atomOneLight,
+  solarizedLight,
+} from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 interface CodeProps {
   code: string;
@@ -12,37 +18,24 @@ interface CodeProps {
   animated?: boolean;
 }
 
-const Code: FC<CodeProps> = ({
+const Code = ({
   code,
   show,
   animated,
   animationDelay,
   language,
-}) => {
+}: CodeProps) => {
   const { theme: applicationTheme } = useTheme();
-  const [text, setText] = useState<string>(animated ? "" : code);
+  console.log("current theme", applicationTheme);
 
-  useEffect(() => {
-    if (show && animated) {
-      let i = 0;
-      setTimeout(() => {
-        const intervalId = setInterval(() => {
-          setText(code.slice(0, i));
-          i++;
-          if (i > code.length) {
-            clearInterval(intervalId);
-          }
-        }, 15);
-
-        return () => clearInterval(intervalId);
-      }, animationDelay || 150);
-    }
-  }, [code, show, animated, animationDelay]);
-
-  // number of lines
-  const lines = text.split(/\r\n|\r|\n/).length;
-
-  return <p>{code}</p>;
+  return (
+    <SyntaxHighlighter
+      language={language}
+      style={applicationTheme == "light" ? atomOneLight : atomOneDarkReasonable}
+    >
+      {code}
+    </SyntaxHighlighter>
+  );
 };
 
 export default Code;
