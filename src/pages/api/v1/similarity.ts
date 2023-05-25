@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { openai } from "@/lib/openai";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-const { w2v } = require("w2v");
 
 const reqSchema = z.object({
   text1: z.string().max(1000),
