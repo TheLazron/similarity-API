@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Button from "./ui/Button";
+import { Button } from "./ui/Button";
 import { signIn } from "next-auth/react";
-import { toastComponent } from "./ui/Toast";
+import { toast } from "./ui/Toast";
 
 interface SignInButtonProps {}
 
@@ -15,7 +15,7 @@ const SignInButton = ({}: SignInButtonProps): JSX.Element => {
     try {
       await signIn("google");
     } catch (error) {
-      toastComponent({
+      toast({
         title: "Error signing in",
         message: "Please  try again later",
         type: "error",

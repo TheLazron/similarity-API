@@ -6,11 +6,6 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 
-export const metedata: Metadata = {
-  title: "Similarity API | Dashboard",
-  description: "Free & open-source text similarity API",
-};
-
 const page = async () => {
   const user = await getServerSession(authOptions);
   console.log("user", user);

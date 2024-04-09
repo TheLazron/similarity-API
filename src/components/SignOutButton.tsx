@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Button from "./ui/Button";
+import { Button } from "./ui/Button";
 import { signOut } from "next-auth/react";
-import { toastComponent } from "./ui/Toast";
+import { toast } from "./ui/Toast";
 
 interface SignOutButtonProps {}
 
@@ -15,7 +15,7 @@ const SignOutButton = ({}: SignOutButtonProps): JSX.Element => {
     try {
       await signOut();
     } catch (error) {
-      toastComponent({
+      toast({
         title: "Error signing out",
         message: "Please  try again later",
         type: "error",
