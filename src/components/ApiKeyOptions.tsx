@@ -1,44 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import { createApiKey } from "@/helpers/create-api-key";
-import { toastComponent } from "./ui/Toast";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/DropDownMenu";
-import Button from "./ui/Button";
-import { Loader2, Router } from "lucide-react";
+} from "@/components/ui/DropDownMenu";
+import { createApiKey } from "@/helpers/create-api-key";
+import { revokeApiKey } from "@/helpers/revoke-api-key";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import revokeApiKey from "@/helpers/revoke-api-key";
+import { FC, useState } from "react";
+import { Button } from "./ui/Button";
+import { toast } from "./ui/Toast";
 
 interface ApiKeyOptionsProps {
   apiKeyKey: string;
-  apiKeyId: string;
 }
 
-const ApiKeyOptions = ({
-  apiKeyKey,
-  apiKeyId,
-}: ApiKeyOptionsProps): JSX.Element => {
+const ApiKeyOptions: FC<ApiKeyOptionsProps> = ({ apiKeyKey }) => {
+  const router = useRouter();
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
   const [isRevoking, setIsRevoking] = useState<boolean>(false);
 
-  const router = useRouter();
   const createNewApiKey = async () => {
     setIsCreatingNew(true);
     try {
-      await revokeApiKey({ keyId: apiKeyId });
+      await revokeApiKey();
       await createApiKey();
-
       router.refresh();
     } catch (error) {
-      toastComponent({
+      toast({
         title: "Error creating new API key",
-        message: "Please try again later",
+        message: "Please try again later.",
         type: "error",
       });
     } finally {
@@ -49,12 +44,12 @@ const ApiKeyOptions = ({
   const revokeCurrentApiKey = async () => {
     setIsRevoking(true);
     try {
-      await revokeApiKey({ keyId: apiKeyId });
+      await revokeApiKey();
       router.refresh();
     } catch (error) {
-      toastComponent({
-        title: "Error revoking Current Api Key",
-        message: "Please try again later",
+      toast({
+        title: "Error revoking your API key",
+        message: "Please try again later.",
         type: "error",
       });
     } finally {
@@ -68,13 +63,13 @@ const ApiKeyOptions = ({
         <Button variant="ghost" className="flex gap-2 items-center">
           <p>
             {isCreatingNew
-              ? "Creating New Key"
+              ? "Creating new key"
               : isRevoking
-              ? "Revoking Key"
+              ? "Revoking key"
               : "Options"}
           </p>
           {isCreatingNew || isRevoking ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="animate-spin h-4 w-4" />
           ) : null}
         </Button>
       </DropdownMenuTrigger>
@@ -82,7 +77,8 @@ const ApiKeyOptions = ({
         <DropdownMenuItem
           onClick={() => {
             navigator.clipboard.writeText(apiKeyKey);
-            toastComponent({
+
+            toast({
               title: "Copied",
               message: "API key copied to clipboard",
               type: "success",
@@ -92,20 +88,12 @@ const ApiKeyOptions = ({
           Copy
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            createNewApiKey();
-          }}
-        >
-          Create New Key
+        <DropdownMenuItem onClick={createNewApiKey}>
+          Create new key
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            revokeCurrentApiKey();
-          }}
-        >
-          Revoke Key
+        <DropdownMenuItem onClick={revokeCurrentApiKey}>
+          Revoke key
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

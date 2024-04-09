@@ -1,10 +1,10 @@
-import { cn } from "@/lib/utils";
+import * as React from "react";
 import { VariantProps, cva } from "class-variance-authority";
-import { size } from "lodash";
-import { HTMLAttributes, forwardRef } from "react";
 
-const paragraphVariants = cva(
-  "max-width-prose text-slate-700 dark:text-slate-300 mb-2 text-center",
+import { cn } from "@/lib/utils";
+
+export const paragraphVariants = cva(
+  "max-w-prose text-slate-700 dark:text-slate-300 mb-2 text-center",
   {
     variants: {
       size: {
@@ -19,23 +19,16 @@ const paragraphVariants = cva(
 );
 
 interface ParagraphProps
-  extends HTMLAttributes<HTMLParagraphElement>,
+  extends React.HTMLAttributes<HTMLParagraphElement>,
     VariantProps<typeof paragraphVariants> {}
 
-// const Paragraph = ({}: ParagraphProps): JSX.Element => {
-//   return <p>Hello</p>;
-// };
-
-const Paragraph = forwardRef<HTMLParagraphElement, ParagraphProps>(
-  (
-    { className, size, children, ...props }: ParagraphProps,
-    ref
-  ): JSX.Element => {
+const Paragraph = React.forwardRef<HTMLParagraphElement, ParagraphProps>(
+  ({ className, size, children, ...props }, ref) => {
     return (
       <p
         ref={ref}
         {...props}
-        className={cn(paragraphVariants({ size }), className)}
+        className={cn(paragraphVariants({ size, className }))}
       >
         {children}
       </p>

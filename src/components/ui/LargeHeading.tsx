@@ -1,8 +1,9 @@
-import { VariantProps, cva } from "class-variance-authority";
-import { HTMLAttributes, forwardRef } from "react";
-import { cn } from "../../lib/utils";
+import { FC } from "react";
 
-const largeHeadingVariants = cva(
+import { cn } from "@/lib/utils";
+import { cva, VariantProps } from "class-variance-authority";
+
+const headingVariants = cva(
   "text-black dark:text-white text-center lg:text-left font-extrabold leading-tight tracking-tighter",
   {
     variants: {
@@ -19,28 +20,20 @@ const largeHeadingVariants = cva(
 );
 
 interface LargeHeadingProps
-  extends HTMLAttributes<HTMLHeadingElement>,
-    VariantProps<typeof largeHeadingVariants> {}
+  extends React.HTMLAttributes<HTMLHeadingElement>,
+    VariantProps<typeof headingVariants> {}
 
-const LargeHeading = forwardRef<HTMLHeadingElement, LargeHeadingProps>(
-  (
-    { className, children, size, ...props }: LargeHeadingProps,
-    ref
-  ): JSX.Element => {
-    console.log("size", size);
-
-    return (
-      <h1
-        ref={ref}
-        {...props}
-        className={cn(largeHeadingVariants({ size }), className)}
-      >
-        {children}
-      </h1>
-    );
-  }
-);
-
-LargeHeading.displayName = "Large Heading";
+const LargeHeading: FC<LargeHeadingProps> = ({
+  children,
+  className,
+  size,
+  ...props
+}) => {
+  return (
+    <h1 {...props} className={cn(headingVariants({ size, className }))}>
+      {children}
+    </h1>
+  );
+};
 
 export default LargeHeading;

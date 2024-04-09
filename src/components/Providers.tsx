@@ -1,10 +1,14 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
+import type { FC, ReactNode } from "react";
 
-const Provider = ({ children }: { children: ReactNode }) => {
+interface ProvidersProps {
+  children: ReactNode;
+}
+
+const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <SessionProvider>{children}</SessionProvider>
@@ -12,4 +16,4 @@ const Provider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default Provider;
+export default Providers;

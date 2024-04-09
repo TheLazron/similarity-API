@@ -18,6 +18,7 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(db),
   session: {
     strategy: "jwt",
@@ -32,7 +33,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    session({ token, session }) {
+    async session({ token, session }) {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;

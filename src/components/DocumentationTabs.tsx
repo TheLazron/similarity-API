@@ -1,32 +1,30 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/Tabs";
-import Code from "./Code";
-import SimpleBar from "simplebar-react";
 import { nodejs, python } from "@/helpers/documentation-code";
-import "simplebar-react/dist/simplebar.min.css";
+import { FC } from "react";
+import SimpleBar from "simplebar-react";
+import Code from "./Code";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 
-interface DocumentationTabsProps {}
-
-const DocumentataionTabs = (): JSX.Element => {
+const DocumentationTabs: FC = () => {
   return (
     <Tabs defaultValue="nodejs" className="max-w-2xl w-full">
       <TabsList>
         <TabsTrigger value="nodejs">NodeJS</TabsTrigger>
         <TabsTrigger value="python">Python</TabsTrigger>
       </TabsList>
-      <SimpleBar>
-        <TabsContent value="nodejs">
-          <Code language={"javascript"} code={nodejs} show />
-        </TabsContent>
-      </SimpleBar>
-      <SimpleBar>
-        <TabsContent value="python">
-          <Code language={"python"} code={python} show />
-        </TabsContent>
-      </SimpleBar>
+      <TabsContent value="nodejs">
+        <SimpleBar forceVisible="y">
+          <Code animated code={nodejs} language="javascript" show />
+        </SimpleBar>
+      </TabsContent>
+      <TabsContent value="python">
+        <SimpleBar forceVisible="y">
+          <Code animated code={python} language="python" show />
+        </SimpleBar>
+      </TabsContent>
     </Tabs>
   );
 };
 
-export default DocumentataionTabs;
+export default DocumentationTabs;

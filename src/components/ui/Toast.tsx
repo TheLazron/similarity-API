@@ -1,8 +1,9 @@
 "use client";
 
+import { Icons } from "@/components/Icons";
 import { cn } from "@/lib/utils";
-import toast, { Toaster as HotToaster } from "react-hot-toast";
-import { Icons } from "./Icons";
+import * as React from "react";
+import hotToast, { Toaster as HotToaster } from "react-hot-toast";
 
 export const Toaster = HotToaster;
 
@@ -10,7 +11,7 @@ interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
   visible: boolean;
 }
 
-const Toast = ({ visible, className, ...props }: ToastProps): JSX.Element => {
+export function Toast({ visible, className, ...props }: ToastProps) {
   return (
     <div
       className={cn(
@@ -21,7 +22,7 @@ const Toast = ({ visible, className, ...props }: ToastProps): JSX.Element => {
       {...props}
     />
   );
-};
+}
 
 interface ToastIconProps extends Partial<React.SVGProps<SVGSVGElement>> {
   name: keyof typeof Icons;
@@ -41,6 +42,12 @@ Toast.Icon = function ToastIcon({ name, className, ...props }: ToastIconProps) {
   );
 };
 
+interface ToastTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
+
+Toast.Title = function ToastTitle({ className, ...props }: ToastTitleProps) {
+  return <p className={cn("text-sm font-medium", className)} {...props} />;
+};
+
 interface ToastDescriptionProps
   extends React.HTMLAttributes<HTMLParagraphElement> {}
 
@@ -51,26 +58,17 @@ Toast.Description = function ToastDescription({
   return <p className={cn("text-sm opacity-80", className)} {...props} />;
 };
 
-interface ToastTitleProps extends React.HTMLAttributes<HTMLHeadElement> {}
-
-Toast.Title = function ToastTitle({ className, ...props }: ToastTitleProps) {
-  return <p className={cn("text-sm font-medium", className)} {...props} />;
-};
-
 interface ToastOpts {
   title?: string;
   message: string;
-  type: "success" | "error" | "default";
+  type?: "success" | "error" | "default";
   duration?: number;
 }
 
-export function toastComponent({
-  title,
-  message,
-  type = "default",
-  duration = 3000,
-}: ToastOpts) {
-  return toast.custom(
+export function toast(opts: ToastOpts) {
+  const { title, message, type = "default", duration = 3000 } = opts;
+
+  return hotToast.custom(
     ({ visible }) => (
       <Toast
         visible={visible}
@@ -86,5 +84,3 @@ export function toastComponent({
     { duration }
   );
 }
-
-export default Toast;

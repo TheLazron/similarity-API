@@ -1,57 +1,61 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { toastComponent } from "./ui/Toast";
 import { createApiKey } from "@/helpers/create-api-key";
 import { Key } from "lucide-react";
+import { FC, useState } from "react";
+import CopyButton from "./CopyButton";
+import { Button } from "./ui/Button";
+import Input from "./ui/Input";
 import LargeHeading from "./ui/LargeHeading";
 import Paragraph from "./ui/Paragraph";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
-import CopyButton from "./CopyButton";
+import { toast } from "./ui/Toast";
 
-const RequestApiKey = (): JSX.Element => {
+interface RequestApiKeyProps {}
+
+const RequestApiKey: FC<RequestApiKeyProps> = ({}) => {
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [apiKey, setApiKey] = useState<string | null>(null);
 
-  const createNewApiKey = async (e: FormEvent<HTMLFormElement>) => {
+  async function createNewApiKey(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsCreating(true);
 
     try {
-      const generateApiKey = await createApiKey();
-      setApiKey(generateApiKey);
+      const generatedApiKey = await createApiKey();
+      setApiKey(generatedApiKey);
     } catch (err) {
       if (err instanceof Error) {
-        toastComponent({
+        toast({
           title: "Error",
           message: err.message,
           type: "error",
         });
+
         return;
       }
-      toastComponent({
+
+      toast({
         title: "Error",
-        message: "Error generating api key",
+        message: "Something went wrong",
         type: "error",
       });
     } finally {
       setIsCreating(false);
     }
-  };
+  }
 
   return (
     <div className="container md:max-w-2xl">
       <div className="flex flex-col gap-6 items-center">
         <Key className="mx-auto h-12 w-12 text-gray-400" />
         <LargeHeading className="text-center">
-          Request your API Key
+          Request your API key
         </LargeHeading>
         <Paragraph>You haven&apos;t requested an API key yet.</Paragraph>
       </div>
       <form
         onSubmit={createNewApiKey}
-        className="mt-6 sm:flex sm:items-start"
+        className="mt-6 sm:flex sm:items-center"
         action="#"
       >
         <label htmlFor="emails" className="sr-only">

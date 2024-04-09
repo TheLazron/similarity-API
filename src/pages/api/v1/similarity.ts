@@ -12,16 +12,16 @@ const reqSchema = z.object({
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const body = req.body as unknown;
-
+  console.log("body", body);
   const apiKey = req.headers.authorization;
+
   if (!apiKey) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   try {
     const { text1, text2 } = reqSchema.parse(body);
-    console.log(text1, text2);
-
+    console.log("text1", text1);
     const validApiKey = await db.apiKey.findFirst({
       where: {
         key: apiKey,
@@ -34,22 +34,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const start = new Date();
+    // const embeddings = await Promise.all(
+    //   [text1, text2].map(async (text) => {
+    //     const res = await openai.createEmbedding({
+    //       model: "text-embedding-ada-002",
+    //       input: text,
+    //     });
 
-    const embeddings = await Promise.all(
-      [text1, text2].map(async (text) => {
-        const res = await openai.createEmbedding({
-          model: "text-embedding-ada-002",
-          input: "hello",
-        });
-
-        return res.data.data[0].embedding;
-      })
-    );
-
-    console.log(embeddings);
-
-    const similarity = cosineSimilarity(embeddings[0], embeddings[1]);
-
+    //     return res.data.data[0].embedding;
+    //   })
+    // );
+    // console.log("embeddings", embeddings);
+    // const similarity = cosineSimilarity(embeddings[0], embeddings[1]);
     const duration = new Date().getTime() - start.getTime();
 
     // Persist request
@@ -64,13 +60,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    return res.status(200).json({ success: true, duration, text1, text2 });
+    return res
+      .status(200)
+      .json({ success: true, text1, text2, similarity: 0.5 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: error.issues });
     }
-
-    console.log(error);
+    // console.log("error", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };

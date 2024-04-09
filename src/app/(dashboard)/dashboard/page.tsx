@@ -23,8 +23,6 @@ const page = async () => {
 
   return (
     <div className="max-w-7xl mx-auto mt-16">
-      {/* <RequestApiKey /> */}
-
       {apiKey ? (
         //  @ts-expect-error Server component
         <ApiDashboard />
